@@ -1,8 +1,20 @@
 
 FROM drupal:10.2.2-php8.3
 
-RUN  composer global require drush/drush
-ENV PATH="~/.composer/vendor/bin:${PATH}"
+# RUN  composer global require drush/drush
+# ENV PATH="~/.composer/vendor/bin:${PATH}"
+
+WORKDIR /opts/drupal
+
+RUN composer require drush/drush
+
+WORKDIR /opts
+
+RUN mkdir dev && mkdir stg
+RUN cp -R drupal dev/bl1 && cp -R drupal dev/bl2
+
+
+
 
 
 RUN apt update && \
