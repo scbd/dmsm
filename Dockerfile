@@ -4,14 +4,15 @@ FROM drupal:10.2.2-php8.3
 # RUN  composer global require drush/drush
 # ENV PATH="~/.composer/vendor/bin:${PATH}"
 
-WORKDIR /opts/drupal
+WORKDIR /opt/drupal
 
 RUN composer require drush/drush
 
-WORKDIR /opts
+WORKDIR /opt
 
 RUN mkdir dev && mkdir stg
-RUN cp -R drupal dev/bl1 && cp -R drupal dev/bl2
+RUN cp -R /opt/drupal /opt/dev/bl1
+RUN cp -R /opt/drupal /opt/dev/bl2
 
 
 
