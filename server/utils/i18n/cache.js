@@ -1,5 +1,5 @@
 import   fs            from 'fs-extra';
-import   isPlainObject from 'lodash.isPlainObject';
+import   isPlainObject from 'lodash.isplainobject';
 import { resolve }     from 'path';
 
 const { importJsFile, writeFile } = useFiles();

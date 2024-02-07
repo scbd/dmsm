@@ -1,6 +1,6 @@
 import fs from 'fs-extra';
 import path from 'path';
-import   isPlainObject from 'lodash.isPlainObject';
+import   isPlainObject from 'lodash.isplainobject';
 import JSON5 from 'json5';
 
 export function freshImport(name){
