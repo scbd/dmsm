@@ -13,7 +13,8 @@ WORKDIR /opt
 RUN mkdir dev && mkdir stg
 RUN cp -R /opt/drupal /opt/dev/bl1
 RUN cp -R /opt/drupal /opt/dev/bl2
-
+RUN cp -R /opt/drupal /opt/stg/bl1
+RUN cp -R /opt/drupal /opt/stg/bl2
 
 
 
