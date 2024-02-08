@@ -6,7 +6,7 @@ _defaults: &defaults
   machine:
     enabled: true
     # Use Ubuntu 20.04
-    image: ubuntu-2004:202201-02
+    image: ubuntu-2204:2024.01.1
   working_directory: ~/scbd/dmsm
   parallelism: 1
 
