@@ -16,19 +16,19 @@ phases:
   build:
     commands:
       - echo Running test ...
-      - docker run --name dmsm  -d -p 8000:8000 output;sleep 10;
-      - docker exec dmsm curl --retry 10 --retry-delay 5 -v http://localhost:8000
+      - docker run --name $CODEBUILD_GIT_REPO  -d -p 8000:8000 output;sleep 10;
+      - docker exec $CODEBUILD_GIT_REPO curl --retry 10 --retry-delay 5 -v http://localhost:8000
 
   post_build:
     commands:
       - echo pushing to docker ...
-      - docker tag output scbd/dmsm:$CODEBUILD_GIT_BRANCH
-      - docker push scbd/dmsm:$CODEBUILD_GIT_BRANCH
+      - docker tag output $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_BRANCH
+      - docker push $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_BRANCH
       - |
         if [ "$CODEBUILD_GIT_TAG" = "" ]; 
         then
-          docker tag output scbd/dmsm:$CODEBUILD_GIT_TAG
-          docker push scbd/dmsm:$CODEBUILD_GIT_TAG
-          docker tag output scbd/dmsm:latest
-          docker push scbd/dmsm:latest
+          docker tag output $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_TAG
+          docker push $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_TAG
+          docker tag output $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:latest
+          docker push $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:latest
         fi
