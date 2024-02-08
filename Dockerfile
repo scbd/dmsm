@@ -11,7 +11,7 @@ RUN cp -R /opt/drupal /opt/stg/bl2
 
 
 RUN apt update && \
-    apt install curl nodejs npm -y
+    apt install curl nodejs npm nano -y
 
 RUN npm install -g yarn
 
