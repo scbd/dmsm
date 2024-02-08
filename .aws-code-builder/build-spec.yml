@@ -25,7 +25,7 @@ phases:
       - docker tag output $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_BRANCH
       - docker push $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_BRANCH
       - |
-        if [ "$CODEBUILD_GIT_TAG" = "" ]; 
+        if [ "$CODEBUILD_GIT_TAG" != "" ]; 
         then
           docker tag output $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_TAG
           docker push $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:$CODEBUILD_GIT_TAG
