@@ -36,7 +36,10 @@ phases:
           docker tag output $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:latest
           docker push $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:latest
         fi
-
+cache:
+  paths:
+    - node_modules/**/*
+    
 #CODEBUILD_GIT_AUTHOR
 #CODEBUILD_GIT_AUTHOR_EMAIL
 #CODEBUILD_GIT_BRANCH
