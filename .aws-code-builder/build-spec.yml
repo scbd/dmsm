@@ -5,12 +5,22 @@ phases:
     commands:
       - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
       - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+
   pre_build:
     commands:
       - echo Logging in to Docker Hub...
       - docker login --username $DOCKER_USER --password $DOCKER_PASS
-      - docker build -t helloworld .
-  build:
-    commands:
-      - docker images
-      - docker run helloworld echo "Hello, World!" 
+      - echo $IMAGE_REPO_NAME $IMAGE_TAG
+      - echo "$IMAGE_REPO_NAME"
+      - echo "$IMAGE_TAG"
+
+
+  # pre_build:
+  #   commands:
+  #     - echo Logging in to Docker Hub...
+  #     - docker login --username $DOCKER_USER --password $DOCKER_PASS
+  #     - docker build -t dmsm .
+  # build:
+  #   commands:
+  #     - docker run --name dmsm  -d -p 8000:8000 output;sleep 10;
+  #     - docker exec dmsm curl --retry 10 --retry-delay 5 -v http://localhost:8000
