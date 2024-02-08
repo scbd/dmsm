@@ -12,17 +12,22 @@ phases:
     commands:
       - echo Logging in to Docker Hub...
       - docker login --username $DOCKER_USER --password $DOCKER_PASS
-      - echo $CODEBUILD_WEBHOOK_BASE_REF
-      - echo $CODEBUILD_WEBHOOK_HEAD_REF
-      - echo $CODEBUILD_WEBHOOK_TRIGGER
+      - docker build -t output --build-arg VERSION=$CODEBUILD_GIT_SHORT_COMMIT --build-arg BRANCH=$CODEBUILD_GIT_BRANCH --build-arg TAG=$CODEBUILD_GIT_TAG .
+  build:
+    commands:
+      - echo Running test ...
+      - docker run --name dmsm  -d -p 8000:8000 output;sleep 10;
+      - docker exec dmsm curl --retry 10 --retry-delay 5 -v http://localhost:8000
 
-
-  # pre_build:
-  #   commands:
-  #     - echo Logging in to Docker Hub...
-  #     - docker login --username $DOCKER_USER --password $DOCKER_PASS
-  #     - docker build -t dmsm .
-  # build:
-  #   commands:
-  #     - docker run --name dmsm  -d -p 8000:8000 output;sleep 10;
-  #     - docker exec dmsm curl --retry 10 --retry-delay 5 -v http://localhost:8000
+  post_build:
+    commands:
+      - echo pushing to docker ...
+      - docker tag output scbd/dmsm:$CODEBUILD_GIT_BRANCH
+      - docker push scbd/dmsm:$CODEBUILD_GIT_BRANCH
+      - |
+        if [ -n "$CODEBUILD_GIT_TAG" ]; then
+          docker tag output scbd/dmsm:$CODEBUILD_GIT_TAG
+          docker push scbd/dmsm:$CODEBUILD_GIT_TAG
+          docker tag output scbd/dmsm:latest
+          docker push scbd/dmsm:latest
+        fi
