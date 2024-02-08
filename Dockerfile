@@ -40,6 +40,6 @@ EXPOSE 8000
 
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=8000
- 
 
-ENTRYPOINT ./entrypoint.sh
+
+ENTRYPOINT /usr/src/app/entrypoint.sh
