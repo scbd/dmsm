@@ -1,6 +1,10 @@
 
 FROM drupal:10.2.2-php8.3
 
+WORKDIR /opt/drupal
+
+RUN composer require drush/drush
+
 WORKDIR /opt
 
 RUN mkdir dev && mkdir stg
