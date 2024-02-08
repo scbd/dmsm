@@ -25,7 +25,8 @@ phases:
       - docker tag output scbd/dmsm:$CODEBUILD_GIT_BRANCH
       - docker push scbd/dmsm:$CODEBUILD_GIT_BRANCH
       - |
-        if [ -n "$CODEBUILD_GIT_TAG" ]; then
+        if [ -z ${CODEBUILD_GIT_TAG} ]; 
+        then
           docker tag output scbd/dmsm:$CODEBUILD_GIT_TAG
           docker push scbd/dmsm:$CODEBUILD_GIT_TAG
           docker tag output scbd/dmsm:latest
