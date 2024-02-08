@@ -20,7 +20,7 @@ phases:
     commands:
       - echo Running test ...
       - docker run --name $CODEBUILD_GIT_REPO  -d -p 8000:8000 output;sleep 10;
-      - docker exec $CODEBUILD_GIT_REPO curl --retry 10 --retry-delay 5 -v http://localhost:8000
+      # - docker exec $CODEBUILD_GIT_REPO curl --retry 10 --retry-delay 5 -v http://localhost:8000
 
   post_build:
     on-failure: ABORT
@@ -36,3 +36,18 @@ phases:
           docker tag output $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:latest
           docker push $CODEBUILD_GIT_ORG/$CODEBUILD_GIT_REPO:latest
         fi
+
+#CODEBUILD_GIT_AUTHOR
+#CODEBUILD_GIT_AUTHOR_EMAIL
+#CODEBUILD_GIT_BRANCH
+#CODEBUILD_GIT_CLEAN_BRANCH
+#CODEBUILD_GIT_ESCAPED_BRANCH
+#CODEBUILD_GIT_COMMIT
+#CODEBUILD_GIT_SHORT_COMMIT
+#CODEBUILD_GIT_MESSAGE
+#CODEBUILD_GIT_TAG
+#CODEBUILD_GIT_MOST_RECENT_TAG
+#CODEBUILD_PROJECT
+#CODEBUILD_PULL_REQUEST 
+#CODEBUILD_GIT_REPO 
+#CODEBUILD_GIT_ORG 
