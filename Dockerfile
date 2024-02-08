@@ -1,13 +1,6 @@
 
 FROM drupal:10.2.2-php8.3
 
-# RUN  composer global require drush/drush
-# ENV PATH="~/.composer/vendor/bin:${PATH}"
-
-WORKDIR /opt/drupal
-
-
-
 WORKDIR /opt
 
 RUN mkdir dev && mkdir stg
@@ -15,8 +8,6 @@ RUN cp -R /opt/drupal /opt/dev/bl1
 RUN cp -R /opt/drupal /opt/dev/bl2
 RUN cp -R /opt/drupal /opt/stg/bl1
 RUN cp -R /opt/drupal /opt/stg/bl2
-
-
 
 
 RUN apt update && \
@@ -41,5 +32,4 @@ EXPOSE 8000
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=8000
 
-
-ENTRYPOINT /usr/src/app/entrypoint.sh
+CMD ["node", ".output/server/index.mjs"]
