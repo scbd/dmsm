@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
     const Authorization = getHeader(event, 'Authorization');
     console.log('================getHeader(event, authorization)', authorization)
     console.log('================getHeader(event, Authorization)', Authorization)
+    console.log('================event', event.node.req.rawHeaders)
     const user = await getUser(event);
 
     user.isAnon  = user?.anonymous;
