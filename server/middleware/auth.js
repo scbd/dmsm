@@ -9,6 +9,7 @@ auth.initialize({ validationKey, encryptionKey });
 export default defineEventHandler(async (event) => {
     const authorization = getHeader(event, 'authorization');
 
+    console.log('================getHeader(event, authorization)', authorization)
     const user = await getUser(event);
 
     user.isAnon  = user?.anonymous;
@@ -43,13 +44,10 @@ async function getUser(event){
 
     delete ticketData.scopes;
 
-    return {  id, anonymous:!!anonymous, email, name, roles, userGroups, government, scopes, ticketData  }; }
+    return {  id, anonymous:!!anonymous, email, name, roles, userGroups, government, scopes, ticketData  }; 
+}
 
 function tryDecrypt (token) {
-
     try { return auth.decrypt(token); }
     catch(error) { return null; }
 }
-//   await request.get(config.api.fallback+'/api/v2013/authentication/user')
-//                                 .accept('application/json')
-//                                 .set('Authorization', 'Token ' + impersonation.generate(userId));
