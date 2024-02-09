@@ -1,7 +1,9 @@
 import { resolve }     from 'path';
 
 export default cachedEventHandler(async (event) => {
-
+    // installDrushOnMultiSite();
+    // const config = useRuntimeConfig(event)
+    // console.log('================', config)
     const isAnon  = event?.context?.user?.anonymous;
     const isAdmin = event?.context?.user?.roles?.includes('Administrator');
 
