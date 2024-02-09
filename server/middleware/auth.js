@@ -8,8 +8,9 @@ auth.initialize({ validationKey, encryptionKey });
 
 export default defineEventHandler(async (event) => {
     const authorization = getHeader(event, 'authorization');
-
+    const Authorization = getHeader(event, 'Authorization');
     console.log('================getHeader(event, authorization)', authorization)
+    console.log('================getHeader(event, Authorization)', Authorization)
     const user = await getUser(event);
 
     user.isAnon  = user?.anonymous;
