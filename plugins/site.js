@@ -7,6 +7,7 @@ export default defineNuxtPlugin({
     // const route       = useRoute();
     const configStore = useConfigStore(nuxtApp.$pinia);
     const headers     = getBaseHeaders();
+    consola.error('headers', headers)
     const { data } = await useFetch('/api/config', { method: 'GET', headers });
 
 
