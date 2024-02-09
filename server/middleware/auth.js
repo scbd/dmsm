@@ -2,7 +2,10 @@ import auth from 'aspnet-formsauthentication';
 
 export const ANONYMOUS = Object.freeze({ id: 1, anonymous: true, roles: [ 'Everyone' ], scopes: [] });
 
-const { validationKey, encryptionKey }  = useRuntimeConfig()
+//const { validationKey, encryptionKey }  = useRuntimeConfig()
+
+const validationKey = process.env.NUXT_VALIDATION_KEY;
+const encryptionKey = process.env.NUXT_ENCRYPTION_KEY;
 
 auth.initialize({ validationKey, encryptionKey });
 
@@ -16,7 +19,8 @@ export default defineEventHandler(async (event) => {
     user.isAnon  = user?.anonymous;
     user.isAdmin = user?.roles?.includes('Administrator');
 
-    console.log('=================', user)
+    console.log('=================', user);
+
     event.context.user = user;
 })
 
