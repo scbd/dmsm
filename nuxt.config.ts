@@ -12,8 +12,9 @@ export default defineNuxtConfig({
     dbPort: parseInt(process.env.NUXT_DRUPAL_DATABASE_PORT_NUMBER),
     dbUser: process.env.NUXT_DRUPAL_DATABASE_USER,
     dbPassword: process.env.NUXT_DRUPAL_DATABASE_PASSWORD,
-    validationKey: process.env.NUXT_VALIDATION_KEY,
-    encryptionKey: process.env.NUXT_ENCRYPTION_KEY
+    validationKey:'',
+    encryptionKey: '',
+    isLocalHost: process.env.NUXT_IS_LOCALHOST
   },
   devtools: { enabled: true },
   // css:[ '@fortawesome/fontawesome-svg-core/styles.css' ],
