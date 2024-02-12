@@ -14,7 +14,7 @@ export default defineNuxtConfig({
             TAG               : '',
             COMMIT            : '',
             auth : {
-                accountsHostUrl : process.env.NUXT_PUBLIC_ACCOUNTS_HOST_URL,
+                accountsHostUrl : '',
                 redirect: {
                     login:  `/signin`,
                     logout: `/logout`,
