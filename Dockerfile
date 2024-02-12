@@ -15,7 +15,7 @@ RUN cp -R /opt/drupal /opt/stg/bl2
 
 
 RUN apt update && \
-    apt install curl nodejs npm nano -y
+    apt install curl nodejs npm nano mariadb-client -y
 
 RUN npm install -g yarn
 
@@ -43,6 +43,6 @@ ARG VERSION
 ENV NUXT_PUBLIC_COMMIT $VERSION
 
 ARG BRANCH
-ENV NUXT_PUBLIC_BRANCH $VERSION
+ENV NUXT_PUBLIC_BRANCH $BRANCH
 
 CMD ["node", ".output/server/index.mjs"]

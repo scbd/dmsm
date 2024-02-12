@@ -17,3 +17,4 @@ dist
 efs
 server/efs
 .output
+.opt

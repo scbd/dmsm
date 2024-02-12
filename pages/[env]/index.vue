@@ -23,6 +23,7 @@
                     <!-- <CCardText class="text-decoration-none">{{mSite?.config?.description}}</CCardText> -->
                     <CCardText class="text-decoration-none">
                         <CButton @click="reload(mSite)" color="secondary">Reload</CButton>
+                        <CButton @click="getStack(mSite)" color="secondary">Download Stack</CButton>
                         <hr>
                         Sites: <CBadge color="secondary">{{sitesCount(mSite)}}</CBadge>
                     </CCardText>
@@ -69,5 +70,31 @@ function reload(mSite){
 
     return $fetch(`/api/${env.value}/${multiSiteCode}/reload`, { method, body,headers });
     // consola.warn('reload')
+}
+function getStack(mSite){
+    const { multiSiteCode } = mSite.config
+    const method  = 'GET';
+    const headers = getBaseHeaders();
+
+    
+    consola.warn('reload')
+
+    return $fetch(`/api/${env.value}/${multiSiteCode}/stack`, { method, headers }).then(download(multiSiteCode));
+    // consola.warn('reload')
+}
+
+function  download (multiSiteCode) { return (response) => {
+
+            const url = window.URL.createObjectURL(new Blob([response], { type: 'application/x-yml'}))
+            const link = document.createElement('a')
+
+            link.href = url
+            link.setAttribute('download', `${multiSiteCode}-stack.yml`)
+            document.body.appendChild(link)
+
+            link.click()
+            link.remove()
+            window.URL.revokeObjectURL(url)
+        }
 }
 </script>

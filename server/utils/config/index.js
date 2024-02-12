@@ -59,14 +59,25 @@ function countVersions(env){
 }
 
 export async function readAllConfigs(event){
-    const d  = freshImport(resolve(`server/efs/config/dev.js`)).then((data)=> data.default);
-    const s  = freshImport(resolve(`server/efs/config/stg.js`)).then((data)=> data.default);
+    const d  = freshImport(resolve(`server/efs/config/dev.js`)).then((data)=> mapRunTime(data.default, 'dev'));
+    const s  = freshImport(resolve(`server/efs/config/stg.js`)).then((data)=> mapRunTime(data.default,'stg'));
     //const prod = importJsFile(resolve(`server/efs/config/prod/index.js`)).then((data)=> data.default);
 
     const [dev,stg] = await Promise.all([d,s]);
 
-    setResponseStatus(event, 200);
+    // setResponseStatus(event, 200);
     return { dev, stg }
+}
+
+export async function readMultiSite({env, multiSiteCode}){
+    const d  = freshImport(resolve(`server/efs/config/${env}.js`)).then((data)=> data.default);
+    // const s  = freshImport(resolve(`server/efs/config/stg.js`)).then((data)=> data.default);
+    //const prod = importJsFile(resolve(`server/efs/config/prod/index.js`)).then((data)=> data.default);
+
+    // const [dev,stg] = await Promise.all([d,s]);
+    const environment = await d;
+    // setResponseStatus(event, 200);
+    return environment[multiSiteCode];
 }
 
 export async function readAllConfigsPublic(event){
@@ -76,13 +87,20 @@ export async function readAllConfigsPublic(event){
 
     const {dev,stg} = await readAllConfigs(event).then(({ dev, stg })=> [mapPublicMultiSite(dev), mapPublicMultiSite(stg)]);
 
-    setResponseStatus(event, 200);
+    // setResponseStatus(event, 200);
     return { dev, stg }
 }
 
-function mapPublicMultiSite(multiSite){
-    const config = mapPublicMultiSiteConfig(multiSite.config)
-    const sites  = mapPublicMultiSiteSites(multiSite.sites);
+function mapPublicMultiSite(multiSites){
+    const newMultiSites = {};
+    for (const [key, multiSite] of Object.entries(multiSites)){
+
+        const config = mapPublicMultiSiteConfig(multiSite.config)
+        const sites  = mapPublicMultiSiteSites(multiSite.sites);
+
+        newMultiSites[key] = { config, sites, meta: multiSite.meta}
+    }
+    return newMultiSites
 }
 
 function mapPublicMultiSiteConfig(config){
@@ -104,4 +122,51 @@ function mapPublicMultiSiteSite(site){
     const entries = Object.entries(site).filter(([key])=> publicSiteProperties.includes(key));
 
     return Object.fromEntries(entries);
+}
+
+function mapRunTime(multiSites, env){
+
+    const newMultiSites = {};
+    for (const [key, multiSite] of Object.entries(multiSites)){
+        if(key === 'meta') continue;
+
+        const config = mapRunTimeMultiSiteConfig(multiSite.config, env);
+        const sites  = mapRunTimeMultiSiteSites(multiSite.sites, config);
+
+        newMultiSites[key] = { ...multiSite,config, sites }
+    }
+    return newMultiSites
+}
+
+function mapRunTimeMultiSiteConfig(config, env){
+    const { multiSiteCode} = config
+    const   root           = `/opt/${env}/${multiSiteCode}`;
+    const   drupalRoot     = `${root}/web`;
+
+    config.runTime = { root, env, drupalRoot };
+
+    return config;
+}
+
+function mapRunTimeMultiSiteSites(sites, multiSiteConfig){
+    const runTimeEntries = [];
+
+    for (const [siteCode, site] of Object.entries(sites))
+        runTimeEntries.push([siteCode, mapRunTimeMultiSiteSite(site, multiSiteConfig)])
+
+    return Object.fromEntries(runTimeEntries);
+}
+
+function mapRunTimeMultiSiteSite(site, multiSiteConfig){
+    const { root,drupalRoot, env } = multiSiteConfig.runTime;
+    const { multiSiteCode, baseHost,  defaultSmtpCredentials} = multiSiteConfig
+    const {  siteCode, host: existingHost, smtpCredentials:siteSmtpCredentials } = site;
+
+    const host         = existingHost || `${siteCode}.${baseHost}`;
+    const siteRoot     = `${drupalRoot}/sites/${siteCode}`;
+    const dataBaseName = `${multiSiteCode}_${siteCode}`;
+    const smtpCredentials = siteSmtpCredentials || defaultSmtpCredentials;
+
+    site.runTime = { root, drupalRoot, env, siteRoot, host, multiSiteCode, dataBaseName, smtpCredentials };
+    return site;
 }

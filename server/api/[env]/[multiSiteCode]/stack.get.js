@@ -2,17 +2,22 @@
 export default defineEventHandler(async (event) => {
     const { isAnon, isAdmin } = event.context.user;
 
-    console.log({ isAnon, isAdmin })
     if(isAnon || !isAdmin)
         throw createError({ statusCode: 401, statusMessage: 'Not Authorized', })
 
     try{
         const env         = getRouterParam(event, 'env')
-        const multiSiteId = getRouterParam(event, 'multiSiteId')
-        
-        setResponseStatus(event, 201);
 
-        return  { env, multiSiteId };
+        
+        const ctx = await getMultiSiteContext(event)
+
+
+        const stack =  await getStack({env, ...ctx});
+
+        setResponseStatus(event, 200);
+
+        console.log('-----------', stack)
+        return  stack;
     }
     catch(e){
         console.error(e);
