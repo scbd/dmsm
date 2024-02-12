@@ -1,25 +1,20 @@
 import { resolve }     from 'path';
 
 export default cachedEventHandler(async (event) => {
-    // installDrushOnMultiSite();
-    // const config = useRuntimeConfig(event)
-    // console.log('================', config)
-    const isAnon  = event?.context?.user?.anonymous;
-    const isAdmin = event?.context?.user?.roles?.includes('Administrator');
+    // writeDrushSiteYmlTemplate()
 
-    if(isAnon || !isAdmin)
-        throw createError({ statusCode: 401, statusMessage: 'Not Authorized', })
+    // const config = useRuntimeConfig();
+
+    // console.log('------------', config)
+    const { isAnon, isAdmin } = event.context.user;
+
+    // if(isAnon || !isAdmin)
+    //     throw createError({ statusCode: 401, statusMessage: 'Not Authorized', })
 
     try{
+        if(isAnon || !isAdmin) return readAllConfigsPublic(event);
 
-        // console.log('================', event.context.user)
-        const d  = freshImport(resolve(`server/efs/config/dev.js`)).then((data)=> data.default);
-        const s  = freshImport(resolve(`server/efs/config/stg.js`)).then((data)=> data.default);
-        //const prod = importJsFile(resolve(`server/efs/config/prod/index.js`)).then((data)=> data.default);
-
-        const [dev,stg] = await Promise.all([d,s]);
-        setResponseStatus(event, 200)
-        return  { dev, stg }
+        return  readAllConfigs(event)//{ dev, stg }
     }
     catch(e){
         console.error(e);

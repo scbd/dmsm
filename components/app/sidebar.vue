@@ -18,7 +18,7 @@
     <CSidebarNav>
 
       <AppEnvChanger/>
-      <KmLink to="/" > Dashboard </KmLink>
+      <KmLink to="/" > Dashboard  </KmLink>
 
       <!-- <CNavGroup :visible="true">
         <template #togglerContent>
@@ -30,11 +30,16 @@
 
       
       <li class="nav-title">Multisite Instances</li>  
-      <!-- v-for="(aTarget,i) in multiSites || []" :key="i" -->
+      <KmLink :to="`/${env}`" > {{env.toLocaleUpperCase()}} Dashboard</KmLink>
+
       <CNavGroup  v-on:click="goTo(`/${env}/${multiSite.multiSiteCode}`)" v-for="(multiSite,i) in multiSites || []" :key="i"  :visible="false">
-        <template #togglerContent> {{multiSite.name}} </template>
+        <template #togglerContent> {{multiSite.name}}</template>
         <KmLink :to="`/${env}/${multiSite.multiSiteCode}/sites`" >Sites</KmLink>
       </CNavGroup>  
+
+      <!-- <CNavGroup>
+        {{config}}
+      </CNavGroup> -->
     </CSidebarNav>
     <!-- @click="userPreferences.setSidebarUnfoldable(!userPreferences.sidebarUnfoldable)" -->
     <!-- <CSidebarToggler  class="d-none d-lg-flex" >  
@@ -46,6 +51,7 @@
 </template>
 <script setup>
   import {  useConfigStore } from "~/stores/config";
+
 
   const configStore = useConfigStore();
 

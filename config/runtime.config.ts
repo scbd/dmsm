@@ -1,13 +1,16 @@
 export default defineNuxtConfig({
     runtimeConfig : {
+        G_I18N_KEY:'',//process.env.NUXT_G_I18N_KEY,
+        gI18nKey:'',
+        validationKey:'',
+        encryptionKey: '',
         public:{
-            env: 'production',
-            baseHost:'.chm-cbd.net',
-            drupalMultisiteIdentifier: 'bl2',
-            gaiaApi: 'https://api.cbd.int/api',
-            ACCOUNTS_HOST_URL : process.env.NUXT_PUBLIC_ACCOUNTS_HOST_URL || 'https://accounts.cbddev.xyz',
-            API_URL           : process.env.NUXT_PUBLIC_API_URL           || 'https://api.cbddev.xyz',
-            REALM_CONF_HOST   : process.env.NUXT_PUBLIC_REALM_CONF_HOST   || 'ort.cbddev.xyz',
+            env: '',
+            isLocalHost: '',
+            baseHost:'',
+            gaiaApi: '',
+            ACCOUNTS_HOST_URL : '',
+            API_URL           : '',
             TAG               : '',
             COMMIT            : '',
             auth : {

@@ -51,6 +51,7 @@ async function setSite(env, mSite, siteName, siteData){
 }
 
 function getMultiSite(site){
+    if(!Object.keys(this[this.env]).length) throw new Error(`useConfigStore.getMultiSite -> State ${this.env} is empty`);
     const multiSite = clone(this[this.env][site]);
 
     delete multiSite.meta;

@@ -34,7 +34,7 @@
                     <CCol class="p-0">
                         <CCard >
                             <CCardHeader class="">
-                                    <CCardTitle>General Info</CCardTitle>
+                                    <CCardTitle>Public Info</CCardTitle>
                                 </CCardHeader>
                             <CCardBody>
 
@@ -63,66 +63,101 @@
                                         <div class="form-floating">
                                             <input type="text" class="form-control" :id="`configBaseHost-${config.multiSiteCode}`" v-model="config.baseHost">
                                             <label :for="`configBaseHost-${config.multiSiteCode}`">Base Host</label>
+                                            
                                             <Icon v-if="config.baseHost" name="copy" class="copy" @click="copyToClipboard(config.baseHost)"/>
                                         </div>
                                     </CListGroupItem>      
                                     <CListGroupItem class="px-0">
+                                        <!-- https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#ListRecordSets/ -->
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" :id="`configBaseHostZoneId-${config.multiSiteCode}`" v-model="config.baseHostZoneId">
-                                            <label :for="`configBaseHostZoneId-${config.multiSiteCode}`">Base Host Zone ID</label>
-                                            <Icon v-if="config.baseHostZoneId" name="copy" class="copy" @click="copyToClipboard(config.baseHostZoneId)"/>
+                                            <input type="text" class="form-control" :id="`configprePublishedBaseHost-${config.multiSiteCode}`" v-model="config.prePublishedBaseHost">
+                                            <label :for="`configprePublishedBaseHost-${config.multiSiteCode}`">Pre-publish Base Host</label>
+                                            <Icon v-if="config.prePublishedBaseHost" name="copy" class="copy" @click="copyToClipboard(config.prePublishedBaseHost)"/>
                                         </div>
                                     </CListGroupItem>                                  
-                                    <!-- <CListGroupItem class="px-0">
-                                        <div class="form-floating">
-                                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                            <label for="floatingPassword">Password</label>
-                                        </div>
-                                    </CListGroupItem> -->
+
                                 </CListGroup>
                             </CCardBody>
 
                         </CCard>
                     </CCol>
                     <CCol class="p-0">
-                        <CCard >
+                        <CCard v-if="config.drupal">
                             <CCardHeader class="">
-                                    <CCardTitle>Api Keys</CCardTitle>
+                                    <CCardTitle>Drupal</CCardTitle>
                                 </CCardHeader>
                             <CCardBody>
                                 <CListGroup flush>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" :id="`configDrupalApiUser-${config.multiSiteCode}`" :value="config.drupalApiUser">
-                                            <label :for="`configDrupalApiUser-${config.multiSiteCode}`">Drupal Api User</label>
-                                            <Icon v-if="config.drupalApiUser" name="copy" class="copy" @click="copyToClipboard(config.drupalApiUser)"/>
+                                            <input type="text" class="form-control" :id="`configDrupalApiUser-${config.multiSiteCode}`" :value="config.drupal.apiUser">
+                                            <label :for="`configDrupalApiUser-${config.multiSiteCode}`">Drupal Root Api User</label>
+                                            <Icon v-if="config.drupal.apiUser" name="copy" class="copy" @click="copyToClipboard(config.drupal.ApiUser)"/>
                                         </div>
                                     </CListGroupItem>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
 
-                                            <input type="text" class="form-control" :id="`configDrupalApiPass-${config.multiSiteCode}`" :value="config.drupalApiPass">
+                                            <input type="text" class="form-control" :id="`configDrupalUserApiUserPass-${config.multiSiteCode}`" :value="config.drupal.apiUserPass">
 
-                                            <label :for="`configDrupalApiPass-${config.multiSiteCode}`">Drupal Api Password</label>
-                                            <Icon v-if="config.drupalApiPass"  name="copy" class="copy" @click="copyToClipboard(config.drupalApiPass)"/>
+                                            <label :for="`configDrupalUserApiUserPass-${config.multiSiteCode}`">Drupal Api Password</label>
+                                            <Icon v-if="config.drupal.apiUserPass"  name="copy" class="copy" @click="copyToClipboard(config.drupal.apiUserPass)"/>
                                         </div>
                                     </CListGroupItem>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
 
-                                            <input type="text" class="form-control" :id="`configdrupalApiKey-${config.multiSiteCode}`" :value="config.drupalApiKey">
+                                            <input type="text" class="form-control" :id="`configdrupalApiKey-${config.multiSiteCode}`" :value="config.drupal.apiKey">
 
                                             <label :for="`configdrupalApiKey-${config.multiSiteCode}`">Drupal Api Key (translate page to drupal node)</label>
-                                            <Icon v-if="config.drupalApiKey"  name="copy" class="copy" @click="copyToClipboard(config.drupalApiKey)"/>
+                                            <Icon v-if="config.drupal.apiKey"  name="copy" class="copy" @click="copyToClipboard(config.drupal.apiKey)"/>
+                                        </div>
+                                    </CListGroupItem>
+
+                                </CListGroup>
+                            </CCardBody>
+
+                        </CCard>
+                        <CCard v-if="config.dataBase">
+                            <CCardHeader class="">
+                                    <CCardTitle>Drupal Database Root</CCardTitle>
+                                </CCardHeader>
+                            <CCardBody>
+                                <CListGroup flush>
+                                    <CListGroupItem class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`configdataBaseName-${config.multiSiteCode}`" :value="config.dataBase.name">
+                                            <label :for="`configdataBaseName-${config.multiSiteCode}`">Database Name</label>
+                                            <Icon v-if="config.dataBase.name" name="copy" class="copy" @click="copyToClipboard(config.dataBase.name)"/>
                                         </div>
                                     </CListGroupItem>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
-
-                                            <input type="text" class="form-control" :id="`configdrupalApiKey-${config.multiSiteCode}`" :value="config.drupalApiKey">
-
-                                            <label :for="`configdrupalApiKey-${config.multiSiteCode}`">Drupal Api Key (translate page to drupal node)</label>
-                                            <Icon v-if="config.drupalApiKey"  name="copy" class="copy" @click="copyToClipboard(config.drupalApiKey)"/>
+                                            <input type="text" class="form-control" :id="`configdataBasePortNumber-${config.multiSiteCode}`" :value="config.dataBase.port">
+                                            <label :for="`configdataBasePortNumber-${config.multiSiteCode}`">Database Port</label>
+                                            <Icon v-if="config.dataBase.port" name="copy" class="copy" @click="copyToClipboard(config.dataBase.port)"/>
+                                        </div>
+                                    </CListGroupItem>
+                                    <CListGroupItem class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`configdataBaseUserName-${config.multiSiteCode}`" :value="config.dataBase.userName">
+                                            <label :for="`configdataBaseUserName-${config.multiSiteCode}`">Database User Name</label>
+                                            <Icon v-if="config.dataBase.userName" name="copy" class="copy" @click="copyToClipboard(config.dataBase.userName)"/>
+                                        </div>
+                                    </CListGroupItem>
+                                    <CListGroupItem class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`configdataBasePassword-${config.multiSiteCode}`" :value="config.dataBase.userPassword">
+                                            <label :for="`configdataBasePassword-${config.multiSiteCode}`">Database Password</label>
+                                            <Icon v-if="config.dataBase.userPassword" name="copy" class="copy" @click="copyToClipboard(config.dataBase.userPassword)"/>
+                                        </div>
+                                    </CListGroupItem>
+                                    <CListGroupItem class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`config.dataBase.host-${config.multiSiteCode}`" :value="config.dataBase.host">
+                                            <label :for="`config.dataBase.host-${config.multiSiteCode}`">Database Host</label>
+                                            <NuxtLink v-if="config.dataBase.host" :to="awsRdsUrl(config.dataBase.host)" class="external-link" external target="_blank"><Icon name="external-link" class="external-link" /></NuxtLink>
+                                            <Icon v-if="config.dataBase.host" name="copy" class="copy" @click="copyToClipboard(config.dataBase.host)"/>
                                         </div>
                                     </CListGroupItem>
                                 </CListGroup>
@@ -133,46 +168,105 @@
                 </CRow>
             </CContainer>
             <CRow class="align-items-start">
-                    <CCol >
-                        <CCard >
+                <CCol class="p-0">
+                        <CCard v-if="config.dns">
                             <CCardHeader class="">
-                                    <CCardTitle>Database</CCardTitle>
+                                    <CCardTitle>DNS</CCardTitle>
                                 </CCardHeader>
                             <CCardBody>
                                 <CListGroup flush>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" :id="`configdataBaseName-${config.multiSiteCode}`" :value="config.dataBaseName">
-                                            <label :for="`configdataBaseName-${config.multiSiteCode}`">Database Name</label>
-                                            <Icon v-if="config.dataBaseName" name="copy" class="copy" @click="copyToClipboard(config.dataBaseName)"/>
+                                            <input type="text" class="form-control" :id="`configDnsHostZoneId-${config.multiSiteCode}`" :value="config.dns.hostZoneId">
+                                            <label :for="`configDnsHostZoneId-${config.multiSiteCode}`">AWS Host Zone Id {{config.baseHost}}</label>
+                                            <NuxtLink v-if="config.dns.hostZoneId" :to="awsHostZoneUrl(config.dns.hostZoneId)" class="external-link" external target="_blank"><Icon name="external-link" class="external-link" /></NuxtLink>
+                                            <Icon v-if="config.dns.hostZoneId" name="copy" class="copy" @click="copyToClipboard(config.dns.hostZoneId)"/>
+                                        </div>
+                                    </CListGroupItem>
+                                    <CListGroupItem v-if="config.prePublishedBaseHost" class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`configDnsPrePublishedHostZoneId-${config.multiSiteCode}`" :value="config.dns. prePublishedHostZoneId">
+                                            <label :for="`configDnsPrePublishedHostZoneId-${config.multiSiteCode}`">AWS Host Zone Id {{config.prePublishedBaseHost}}</label>
+                                            <NuxtLink v-if="config.dns.prePublishedHostZoneId" :to="awsHostZoneUrl(config.dns.prePublishedHostZoneId)" class="external-link" external target="_blank"><Icon name="external-link" class="external-link" /></NuxtLink>
+                                           
+                                            <Icon v-if="config.dns.prePublishedHostZoneId" name="copy" class="copy" @click="copyToClipboard(config.dns. prePublishedHostZoneId)"/>
+                                        </div>
+                                    </CListGroupItem>
+
+                                </CListGroup>
+                            </CCardBody>
+
+                        </CCard>
+                        <CCard v-if="config.auth" >
+                            <CCardHeader class="">
+                                    <CCardTitle>{{config.auth.uri || 'Auth'}}</CCardTitle>
+                                </CCardHeader>
+                            <CCardBody>
+                                <CListGroup flush>
+                                    <CListGroupItem class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`configAuthUri-${config.multiSiteCode}`" :value="config.auth.uri">
+                                            <label :for="`configAuthUri-${config.multiSiteCode}`">Uri</label>
+
+                                            <Icon v-if="config.auth.uri" name="copy" class="copy" @click="copyToClipboard(config.auth.uri)"/>
                                         </div>
                                     </CListGroupItem>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" :id="`configdataBasePortNumber-${config.multiSiteCode}`" :value="config.dataBasePortNumber">
-                                            <label :for="`configdataBasePortNumber-${config.multiSiteCode}`">Database Port</label>
-                                            <Icon v-if="config.dataBasePortNumber" name="copy" class="copy" @click="copyToClipboard(config.dataBasePortNumber)"/>
+                                            <input type="text" class="form-control" :id="`configAuthValidationKey-${config.multiSiteCode}`" :value="config.auth.validationKey">
+                                            <label :for="`configAuthValidationKey-${config.multiSiteCode}`">Validation Key</label>
+
+                                            <Icon v-if="config.auth.validationKey" name="copy" class="copy" @click="copyToClipboard(config.auth.validationKey)"/>
+                                        </div>
+                                    </CListGroupItem>
+                                    <CListGroupItem  class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`configAuthEncryptionKey-${config.multiSiteCode}`" :value="config.auth.encryptionKey">
+                                            <label :for="`configAuthEncryptionKey-${config.multiSiteCode}`">Encryption Key</label>
+                                           
+                                            <Icon v-if="config.auth.encryptionKey" name="copy" class="copy" @click="copyToClipboard(config.auth.encryptionKey)"/>
+                                        </div>
+                                    </CListGroupItem>
+
+                                </CListGroup>
+                            </CCardBody>
+
+                        </CCard>
+                    </CCol>
+                    <CCol >
+                        <CCard v-if="config.defaultSmtpCredentials">
+                            <CCardHeader class="">
+                                    <CCardTitle>Default SMTP</CCardTitle>
+                                </CCardHeader>
+                            <CCardBody>
+                                <CListGroup flush>
+                                    <CListGroupItem class="px-0">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" :id="`configSmtpPortNumber-${config.multiSiteCode}`" :value="config.defaultSmtpCredentials.port">
+                                            <label :for="`configSmtpPortNumber-${config.multiSiteCode}`">Port</label>
+                                            <Icon v-if="config.defaultSmtpCredentials.port" name="copy" class="copy" @click="copyToClipboard(config.defaultSmtpCredentials.port)"/>
                                         </div>
                                     </CListGroupItem>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" :id="`configdataBaseUserName-${config.multiSiteCode}`" :value="config.dataBaseUserName">
-                                            <label :for="`configdataBaseUserName-${config.multiSiteCode}`">Database User Name</label>
-                                            <Icon v-if="config.dataBaseUserName" name="copy" class="copy" @click="copyToClipboard(config.dataBaseUserName)"/>
+                                            <input type="text" class="form-control" :id="`configdataBaseUserName-${config.multiSiteCode}`" :value="config.defaultSmtpCredentials.userName">
+                                            <label :for="`configdataBaseUserName-${config.multiSiteCode}`"> User Name</label>
+                                            <Icon v-if="config.defaultSmtpCredentials.userName" name="copy" class="copy" @click="copyToClipboard(config.defaultSmtpCredentials.userName)"/>
                                         </div>
                                     </CListGroupItem>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" :id="`configdataBasePassword-${config.multiSiteCode}`" :value="config.dataBasePassword">
-                                            <label :for="`configdataBasePassword-${config.multiSiteCode}`">Database Password</label>
-                                            <Icon v-if="config.dataBasePassword" name="copy" class="copy" @click="copyToClipboard(config.dataBasePassword)"/>
+                                            <input type="text" class="form-control" :id="`configSmtpPassword-${config.multiSiteCode}`" :value="config.defaultSmtpCredentials.userPassword">
+                                            <label :for="`configSmtpPassword-${config.multiSiteCode}`">User Password</label>
+                                            <Icon v-if="config.defaultSmtpCredentials.userPassword" name="copy" class="copy" @click="copyToClipboard(config.defaultSmtpCredentials.userPassword)"/>
                                         </div>
                                     </CListGroupItem>
                                     <CListGroupItem class="px-0">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" :id="`config.dataBaseHost-${config.multiSiteCode}`" :value="config.dataBaseHost">
-                                            <label :for="`config.dataBaseHost-${config.multiSiteCode}`">Database Host</label>
-                                            <Icon v-if="config.dataBaseHost" name="copy" class="copy" @click="copyToClipboard(config.dataBaseHost)"/>
+                                            <input type="text" class="form-control" :id="`config.defaultSmtpCredentials.host-${config.multiSiteCode}`" :value="config.defaultSmtpCredentials.host">
+                                            <label :for="`config.defaultSmtpCredentials.host-${config.multiSiteCode}`">Host</label>
+                                            <NuxtLink v-if="config.defaultSmtpCredentials.host" :to="awsRdsUrl(config.dataBase.host)" class="external-link" external target="_blank"><Icon name="external-link" class="external-link" /></NuxtLink>
+                                            <Icon v-if="config.defaultSmtpCredentials.host" name="copy" class="copy" @click="copyToClipboard(config.defaultSmtpCredentials.host)"/>
                                         </div>
                                     </CListGroupItem>
                                 </CListGroup>
@@ -180,6 +274,7 @@
 
                         </CCard>
                     </CCol>
+                    
             </CRow>
         </CCardBody>
         <CCardFooter v-if="openConfig">
@@ -214,7 +309,14 @@ function save(){
     openConfig.value = false;
 }
 
+function awsHostZoneUrl(hostZoneId){
+    return `https://us-east-1.console.aws.amazon.com/route53/v2/hostedzones?region=us-east-1#ListRecordSets/${hostZoneId}`
+}
 
+function awsRdsUrl(url){
+    const [dbId] = url.split('.');
+    return `https://us-east-1.console.aws.amazon.com/rds/home?region=us-east-1#database:id=${dbId}`
+}
 </script>
 <style scoped>
 .copy{
@@ -230,6 +332,18 @@ function save(){
     font-size: 24px;
 }
 
+.external-link{
+    position:absolute; 
+    right: 20px;
+    top: 30%;
+    font-size: 21px;
+    cursor: pointer;
+    transition: all 0.1s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.external-link:hover{
+    fill: #007bff;
+    font-size: 24px;
+}
 .down {
     --fadeDown-distance: -1rem;
     animation: fadeDown .25s;

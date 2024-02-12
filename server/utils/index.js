@@ -17,3 +17,19 @@ export function makeHash (x) {
 
     return crypto.createHash('sha1').update(data).digest('hex')
 }
+
+export function getTimeParams (ctx) {
+  const now      = new Date();
+  const year     = now.getFullYear();
+  const month    = ('0' + (now.getMonth() + 1)).slice(-2);
+  const day      = ('0' + now.getDate()).slice(-2);
+  const hour     = now.getHours();
+  const min      = now.getMinutes();
+  const seconds  = now.getSeconds();
+  const dateTime = `${year}-${month}-${day}-T-${hour}-${min}-${seconds}`;
+
+  const S3_URL = `s3://biolands/env-${ctx.env}/${ctx.multiSiteCode}`;
+  const S3_URL_YEAR_MONTH = `${S3_URL}/${year}-${month}`;
+
+  return { S3_URL, S3_URL_YEAR_MONTH, dateTime };
+}
