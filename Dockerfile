@@ -1,5 +1,5 @@
 
-FROM drupal:10.2.2-php8.3 as base
+FROM drupal:10.2.2-php8.3
 
 WORKDIR /opt/drupal
 
@@ -19,23 +19,16 @@ RUN apt update && \
 
 RUN npm install -g yarn
 
-FROM base as build
-
 WORKDIR /usr/src/app
 
-COPY --link package.json yarn.lock ./
+COPY package.json ./
 
 RUN yarn clean-reinstall
 
-COPY --link . ./
+COPY . ./
 
 RUN yarn build
 
-FROM base
-
-COPY --from=build .output .output
-
-WORKDIR /usr/src/app/.output
 ENV PORT 8000
 
 EXPOSE 8000
@@ -43,4 +36,13 @@ EXPOSE 8000
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=8000
 
-CMD ["node", "server/index.mjs"]
+ARG TAG
+ENV NUXT_PUBLIC_TAG $TAG
+
+ARG VERSION
+ENV NUXT_PUBLIC_COMMIT $VERSION
+
+ARG BRANCH
+ENV NUXT_PUBLIC_BRANCH $VERSION
+
+CMD ["node", ".output/server/index.mjs"]
