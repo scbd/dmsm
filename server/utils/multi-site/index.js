@@ -41,7 +41,7 @@ function writeSiteSettingsPhp(multiSiteCtx){
         if(siteCode === 'meta')continue;
         const { drupalRoot, host, dataBaseName } = site.runTime;
 
-        const killCache = env === 'prod'? false : true;
+        const killCache = false//env === 'prod'? false : true;
         writeSiteSettingsPhpTemplate(multiSiteCtx,{ siteCode, killCache, dataBaseName})
     }
 }
