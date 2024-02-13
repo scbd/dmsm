@@ -8,7 +8,7 @@ export const getMultiSiteContext = async (event)=>{
     const env         = getRouterParam(event, 'env')
     const multiSiteCode = getRouterParam(event, 'multiSiteCode')
 
-    const aMultiSite = await readMultiSite({env, multiSiteCode})
+    const aMultiSite = await readMultiSite(event)
     aMultiSite.runTimeConfig = runTimeConfig;
 
 
