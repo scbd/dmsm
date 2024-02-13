@@ -22,7 +22,10 @@ export const publicSiteProperties = [
     'defaultLocale',
     'locales',
     'country',
-    'countries'
+    'countries',
+    'runTime',
+    'env'
+
 ];
 
 export async function writeConfig(event){
@@ -69,27 +72,74 @@ export async function readAllConfigs(event){
     return { dev, stg }
 }
 
-export async function readMultiSite({env, multiSiteCode}){
-    const d  = freshImport(resolve(`server/efs/config/${env}.js`)).then((data)=> data.default);
-    // const s  = freshImport(resolve(`server/efs/config/stg.js`)).then((data)=> data.default);
-    //const prod = importJsFile(resolve(`server/efs/config/prod/index.js`)).then((data)=> data.default);
-
-    // const [dev,stg] = await Promise.all([d,s]);
-    const environment = await d;
-    // setResponseStatus(event, 200);
-    return environment[multiSiteCode];
-}
 
 export async function readAllConfigsPublic(event){
-    // const d  = freshImport(resolve(`server/efs/config/dev.js`)).then((data)=> data.default);
-    // const s  = freshImport(resolve(`server/efs/config/stg.js`)).then((data)=> data.default);
-    //const prod = importJsFile(resolve(`server/efs/config/prod/index.js`)).then((data)=> data.default);
 
-    const {dev,stg} = await readAllConfigs(event).then(({ dev, stg })=> [mapPublicMultiSite(dev), mapPublicMultiSite(stg)]);
+    const [dev,stg] = await readAllConfigs(event).then(({ dev, stg })=> [mapPublicMultiSite(mapRunTime(dev,'dev')), mapPublicMultiSite(mapRunTime(stg, 'stg'))]);
 
     // setResponseStatus(event, 200);
     return { dev, stg }
 }
+
+export async function readConfigPublic(event){
+        const env        = getRouterParam(event, 'env')
+        const configName = resolve(`server/efs/config/${env}.js`);
+
+
+        return  mapPublicMultiSite(mapRunTime((await freshImport(configName)).default,env)) 
+}
+
+export async function readConfig(event){
+    const env        = getRouterParam(event, 'env')
+    const configName = resolve(`server/efs/config/${env}.js`);
+
+
+    return  mapRunTime((await freshImport(configName)).default,env)
+}
+
+export async function readMultiSitePublic(event){
+    const env        = getRouterParam(event, 'env')
+    const multiSiteCode   = getRouterParam(event, 'multiSiteCode')
+    const configName = resolve(`server/efs/config/${env}.js`);
+
+    const config = mapPublicMultiSite(mapRunTime((await freshImport(configName)).default,env)) 
+
+    return  config[multiSiteCode]
+}
+
+export async function readMultiSite(event){
+    const env        = getRouterParam(event, 'env')
+    const multiSiteCode   = getRouterParam(event, 'multiSiteCode')
+    const configName = resolve(`server/efs/config/${env}.js`);
+
+    const config = mapRunTime((await freshImport(configName)).default,env)
+
+    return  config[multiSiteCode]
+}
+export async function readSitePublic(event){
+    const env             = getRouterParam(event, 'env')
+    const multiSiteCode   = getRouterParam(event, 'multiSiteCode')
+    const siteCode        = getRouterParam(event, 'siteCode')
+    const configName      = resolve(`server/efs/config/${env}.js`);
+
+    const config = mapPublicMultiSite(mapRunTime((await freshImport(configName)).default,env)) 
+
+
+    return  config[multiSiteCode].sites[siteCode]
+}
+
+export async function readSite(event){
+    const env             = getRouterParam(event, 'env')
+    const multiSiteCode   = getRouterParam(event, 'multiSiteCode')
+    const siteCode        = getRouterParam(event, 'siteCode')
+    const configName      = resolve(`server/efs/config/${env}.js`);
+
+    const config = mapRunTime((await freshImport(configName)).default,env)
+
+
+    return  config[multiSiteCode].sites[siteCode]
+}
+
 
 function mapPublicMultiSite(multiSites){
     const newMultiSites = {};
@@ -119,9 +169,15 @@ function mapPublicMultiSiteSites(sites){
 }
 
 function mapPublicMultiSiteSite(site){
+    
     const entries = Object.entries(site).filter(([key])=> publicSiteProperties.includes(key));
 
-    return Object.fromEntries(entries);
+    const publicSite = Object.fromEntries(entries)
+    if(!site?.runTime )return publicSite;
+
+    publicSite.runTime =  Object.fromEntries(Object.entries(publicSite.runTime).filter(([key])=> publicSiteProperties.includes(key)));
+
+    return publicSite;
 }
 
 function mapRunTime(multiSites, env){
@@ -160,13 +216,16 @@ function mapRunTimeMultiSiteSites(sites, multiSiteConfig){
 function mapRunTimeMultiSiteSite(site, multiSiteConfig){
     const { root,drupalRoot, env } = multiSiteConfig.runTime;
     const { multiSiteCode, baseHost,  defaultSmtpCredentials} = multiSiteConfig
-    const {  siteCode, host: existingHost, smtpCredentials:siteSmtpCredentials } = site;
+    const { countries:passedCountries, country, siteCode, host: existingHost, smtpCredentials:siteSmtpCredentials } = site;
 
-    const host         = existingHost || `${siteCode}.${baseHost}`;
-    const siteRoot     = `${drupalRoot}/sites/${siteCode}`;
-    const dataBaseName = `${multiSiteCode}_${siteCode}`;
+    const host            = existingHost || `${siteCode}.${baseHost}`;
+    const siteRoot        = `${drupalRoot}/sites/${siteCode}`;
+    const dataBaseName    = `${multiSiteCode}_${siteCode}`;
     const smtpCredentials = siteSmtpCredentials || defaultSmtpCredentials;
 
-    site.runTime = { root, drupalRoot, env, siteRoot, host, multiSiteCode, dataBaseName, smtpCredentials };
+    const countries = passedCountries?.length? Array.from(new Set([...passedCountries, (country|'')])) : [country];
+
+    site.runTime = { countries, root, drupalRoot, env, siteRoot, host, multiSiteCode, dataBaseName, smtpCredentials };
+
     return site;
 }
