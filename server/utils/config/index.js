@@ -44,23 +44,6 @@ export async function writeConfig(event){
     writeJsFile(configName, body);
 }
 
-function createVersion(env){
-    const versionNumber = countVersions(env) + 1;
-    const from          = resolve(`server/efs/config/${env}.js`);
-    const to            = resolve(`server/efs/config/versions/${env}/${versionNumber}.js`);
-
-    fs.copySync(from, to, { preserveTimestamps: true });
-}
-
-function countVersions(env){
-
-    const dir = resolve(`server/efs/config/versions/${env}`);
-
-    fs.ensureDirSync(dir);
-
-    return fs.readdirSync(dir).length;
-}
-
 export async function readAllConfigs(event){
     const d  = freshImport(resolve(`server/efs/config/dev.js`)).then((data)=> mapRunTime(data.default, 'dev'));
     const s  = freshImport(resolve(`server/efs/config/stg.js`)).then((data)=> mapRunTime(data.default,'stg'));
@@ -71,7 +54,6 @@ export async function readAllConfigs(event){
     // setResponseStatus(event, 200);
     return { dev, stg }
 }
-
 
 export async function readAllConfigsPublic(event){
 
@@ -223,9 +205,26 @@ function mapRunTimeMultiSiteSite(site, multiSiteConfig){
     const dataBaseName    = `${multiSiteCode}_${siteCode}`;
     const smtpCredentials = siteSmtpCredentials || defaultSmtpCredentials;
 
-    const countries = passedCountries?.length? Array.from(new Set([...passedCountries, (country|'')])) : [country];
+    const countries = (passedCountries?.length? Array.from(new Set([...passedCountries, (country|'')])) : [country]).filter(x => x);
 
     site.runTime = { countries, root, drupalRoot, env, siteRoot, host, multiSiteCode, dataBaseName, smtpCredentials };
 
     return site;
+}
+
+function createVersion(env){
+    const versionNumber = countVersions(env) + 1;
+    const from          = resolve(`server/efs/config/${env}.js`);
+    const to            = resolve(`server/efs/config/versions/${env}/${versionNumber}.js`);
+
+    fs.copySync(from, to, { preserveTimestamps: true });
+}
+
+function countVersions(env){
+
+    const dir = resolve(`server/efs/config/versions/${env}`);
+
+    fs.ensureDirSync(dir);
+
+    return fs.readdirSync(dir).length;
 }
