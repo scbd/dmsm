@@ -7,12 +7,14 @@
 <script setup>
 
 const configStore = useConfigStore();
-
+const route = useRoute();
 const selected     = computed(()=>configStore.env);
 const environments = computed(()=>configStore.environments);
 
 function changed(e){
     configStore.setEnv(e.target.value)
+    consola.warn(route)
+    navigateTo(`/${e.target.value}/${route.params.multiSiteIdentifier}`)
 }
 
 </script>
