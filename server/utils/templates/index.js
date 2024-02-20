@@ -25,7 +25,9 @@ export const writeCommonSettingsPhpTemplate = (ctx) => {
     const fileName         = `${context}/_common/settings.common.php`;
 
     ensureFileSync(fileName);
-    
+    console.log(`writing ${fileName}`)
+    console.log(``)
+    console.log(``)
     return writeFileSync(fileName, compiledTemplate);
 }
 export const getSiteSettingsPhp = (interpolationData) => {
@@ -45,7 +47,9 @@ export const writeSiteSettingsPhpTemplate = (ctx, interpolationData) => {
     const fileName         = `${context}/settings.php`;
 
     ensureFileSync(fileName);
-    
+    console.log(`writing ${fileName}`)
+    console.log(``)
+    console.log(``)
     return writeFileSync(fileName, compiledTemplate);
 }
 
@@ -66,7 +70,9 @@ export const writeDrushSiteYmlTemplate = (ctx, interpolationData) => {
     const fileName         = `${context}/${interpolationData.siteCode}.site.yml`;
 
     ensureFileSync(fileName);
-    
+    console.log(`writing ${fileName}`)
+    console.log(``)
+    console.log(``)
     return writeFileSync(fileName, compiledTemplate);
 }
 
@@ -91,6 +97,8 @@ export const writeSitesPhpTemplate = (multiSiteCtx) => {
     const fileName         = `${context}/sites.php`;
 
     ensureFileSync(fileName);
-
+    console.log(`writing ${fileName}`)
+    console.log(``)
+    console.log(``)
     return  writeFileSync(fileName, fileData);
 }

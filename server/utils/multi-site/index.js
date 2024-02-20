@@ -12,9 +12,21 @@
 export async function  reload(multiSiteCtx){
     
     await writeDrushFiles(multiSiteCtx);
+    console.log('writeDrushFiles done');
+    console.log(``)
+    console.log(``)
     await writeSitesPhpTemplate(multiSiteCtx);
+    console.log('writeSitesPhpTemplate done');
+    console.log(``)
+    console.log(``)
     await writeSiteSettingsPhp(multiSiteCtx);
+    console.log('writeSiteSettingsPhp done');
+    console.log(``)
+    console.log(``)
     await writeCommonSettingsPhpTemplate(multiSiteCtx);
+    console.log('writeCommonSettingsPhpTemplate done');
+    console.log(``)
+    console.log(``)
 }
 
 export function getStack(multiSiteCtx){
