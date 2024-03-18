@@ -9,12 +9,12 @@ export async function getCache({ lang, target, key }){
 
   if(!cache) return undefined;
 
-  if(lang) return key? cache[key] : cache[target];
+  if(lang) return target? cache[target] : cache[key];
 
-  const map = { [key||target]: {} }
+  const map = { [target||key]: {} }
 
   for (const locale in cache)
-    map[key||target][`${locale}`]= key? cache[locale][key] : cache[locale][target];
+    map[target||key][`${locale}`]= target? cache[locale][target] : cache[locale][key];
 
   if(Object.keys(map).length) return map;
 
@@ -35,7 +35,7 @@ export async function setCache({ locale, target, key, value }){
 
   const fileName = resolve(`server/efs/i18n-cache/${locale}.js`);
 
-  return writeFile({ fileName, data:cache, exportDefault:true })
+  return writeFile(fileName, cache, true )
 }
 
 
@@ -55,7 +55,7 @@ function ensureLanguage(lang){
   const fileName = resolve(`server/efs/i18n-cache/${lang}.js`);
   const data = `export default {}`;
 
-  return writeFile({ fileName, data });
+  return writeFile(fileName, data );
 }
 
 export async function readCache(lang){

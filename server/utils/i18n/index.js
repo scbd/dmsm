@@ -11,7 +11,7 @@ export const translate = async ({ key, target, locale }) => {
 console.log('exists: ',exists)
   if (exists) return exists;
 
-  const [ value ] = await GT.translate(key || target, locale);
+  const [ value ] = await GT.translate(target||key, locale);
 
 
   await setCache({ locale:lang,  key, target, value });

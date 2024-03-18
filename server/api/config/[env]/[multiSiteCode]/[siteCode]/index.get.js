@@ -1,5 +1,4 @@
-import { resolve }     from 'path';
-const {  freshImport } = useFiles();
+
 
 export default defineEventHandler(async (event) => {
     

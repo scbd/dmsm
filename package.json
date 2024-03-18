@@ -42,6 +42,7 @@
     "mariadb": "^3.2.3",
     "param-case": "^4.0.0",
     "php-serialize": "^4.1.1",
-    "superagent": "^8.1.2"
+    "superagent": "^8.1.2",
+    "vue-multiselect": "3.0.0-beta.2"
   }
 }

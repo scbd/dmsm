@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from "url";
 export default defineNuxtConfig({
   ssr:false,
   devtools: { enabled: true },
-  // css:[ '@fortawesome/fontawesome-svg-core/styles.css' ],
+  css:['vue-multiselect/dist/vue-multiselect.css' ],
   extends:[ './layers/auth', './config' ],
   modules: [
       '@pinia/nuxt',

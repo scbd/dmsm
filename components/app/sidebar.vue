@@ -40,10 +40,16 @@
       <!-- <CNavGroup>
         {{config}}
       </CNavGroup> -->
+
+      <li class="nav-title">Util</li>  
+      <CNavGroup  :visible="true">
+        <template #togglerContent> i18n</template>
+        <KmLink :to="`/util/i18n/translate`" >Translate</KmLink>
+        <KmLink :to="`/util/i18n`" >Cache</KmLink>
+      </CNavGroup>  
     </CSidebarNav>
     <!-- @click="userPreferences.setSidebarUnfoldable(!userPreferences.sidebarUnfoldable)" -->
     <!-- <CSidebarToggler  class="d-none d-lg-flex" >  
-   
 
     </CSidebarToggler> -->
     

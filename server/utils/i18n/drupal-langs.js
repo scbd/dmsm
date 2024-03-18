@@ -6,6 +6,10 @@ export const localesInUse = ["en","zh","ms","my","km","lo","fil","th","vi","ar",
 
 const GT = new v2.Translate({ key: process.env.G_I18N_KEY });
 
+export async function getGoogleSupportedLanguages () {
+  return (await GT.getLanguages())[0];
+}
+
 export async function getSupportedLocales () {
   const gCodes = (await GT.getLanguages())[0].map(({ code }) => code);
 
